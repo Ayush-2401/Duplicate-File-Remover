@@ -13,6 +13,14 @@ A fast, cross-platform desktop utility designed to scan multiple directories, id
 
 ---
 
+## 📸 Screenshots
+
+*(Replace the placeholder below by adding a screenshot of your app named `screenshot.png` inside the `assets/` folder and pushing it to GitHub!)*
+
+![Duplicate File Remover App](assets/screenshot.png)
+
+---
+
 ## 🛠 Tech Stack
 
 The application is built using modern web technologies packaged as a native desktop app:
