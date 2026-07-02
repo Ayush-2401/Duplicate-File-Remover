@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duplicate File Remover</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════ TITLE BAR ═══════════════════════════════ -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-drag">
+      <div class="titlebar-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M3 7h18M3 12h12M3 17h8" stroke="url(#grad1)" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="19" cy="17" r="3" stroke="url(#grad1)" stroke-width="2"/>
+          <line x1="21.5" y1="19.5" x2="23" y2="21" stroke="url(#grad1)" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="titlebar-title">Duplicate File Remover</span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="ctrl-btn" id="btn-min" title="Minimize">&#x2212;</button>
+      <button class="ctrl-btn" id="btn-max" title="Maximize">&#x25A1;</button>
+      <button class="ctrl-btn close" id="btn-close" title="Close">&#x2715;</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ APP WRAPPER ══════════════════════════════ -->
+  <div class="app-wrapper">
+
+    <!-- ── SCREEN 1: SETUP ─────────────────────────────────────────────── -->
+    <div class="screen active" id="screen-setup">
+      <div class="screen-header">
+        <div class="step-badges">
+          <span class="badge active">1</span>
+          <span class="badge-line"></span>
+          <span class="badge">2</span>
+          <span class="badge-line"></span>
+          <span class="badge">3</span>
+        </div>
+        <h1 class="screen-title">Configure &amp; Scan</h1>
+        <p class="screen-sub">Add your source folders and choose where to save the consolidated files.</p>
+      </div>
+
+      <div class="two-col">
+        <!-- Source Folders -->
+        <div class="card" id="card-sources" id="drop-zone">
+          <div class="card-header">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+            <span>Source Folders</span>
+            <span class="folder-count-badge" id="folder-count-badge" style="display:none">0</span>
+            <button class="btn-clear-all" id="btn-clear-all" style="display:none" title="Remove all folders">Clear All</button>
+          </div>
+          <div class="folder-drop-zone" id="drop-zone">
+            <div class="folder-list" id="source-list">
+              <div class="empty-state" id="source-empty">
+                <svg viewBox="0 0 24 24" fill="none" width="36" height="36">
+                  <path d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#4b5563" stroke-width="1.5"/>
+                  <path d="M12 11v6M9 14h6" stroke="#4b5563" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <p>No folders added yet</p>
+                <small style="color:#374151;font-size:11px">Drag &amp; drop folders here, or use the button below</small>
+              </div>
+            </div>
+          </div>
+          <button class="btn-add" id="btn-add-sources">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Folder — Click to Add More
+          </button>
+          <p class="folder-hint" id="folder-hint">💡 Click the button multiple times to add more folders. You can also drag &amp; drop folders from Windows Explorer.</p>
+        </div>
+
+        <!-- Destination + Options -->
+        <div class="right-col">
+          <div class="card" id="card-dest">
+            <div class="card-header">
+              <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Destination Folder</span>
+            </div>
+            <div class="dest-display" id="dest-display">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20" style="flex-shrink:0">
+                <path d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#6b7280" stroke-width="1.5"/>
+              </svg>
+              <span id="dest-path-text" class="dest-placeholder">No destination selected</span>
+            </div>
+            <button class="btn-add" id="btn-pick-dest">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v4M10 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Choose Destination
+            </button>
+          </div>
+
+          <div class="card" id="card-options">
+            <div class="card-header">
+              <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M19.07 4.93A10 10 0 004.93 19.07M19.07 19.07A10 10 0 004.93 4.93" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>Options</span>
+            </div>
+            <div class="option-row">
+              <div class="option-label">
+                <span>Recursive Scan</span>
+                <small>Include files inside subfolders</small>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="opt-recursive" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="option-row">
+              <div class="option-label">
+                <span>Move Files</span>
+                <small>Delete from source after copying</small>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="opt-move" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-primary" id="btn-scan">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Scan Folders
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 2: SCAN RESULTS ──────────────────────────────────────── -->
+    <div class="screen" id="screen-results">
+      <div class="screen-header">
+        <div class="step-badges">
+          <span class="badge done">✓</span>
+          <span class="badge-line active-line"></span>
+          <span class="badge active">2</span>
+          <span class="badge-line"></span>
+          <span class="badge">3</span>
+        </div>
+        <h1 class="screen-title">Scan Results</h1>
+        <p class="screen-sub">Review the findings before starting consolidation.</p>
+      </div>
+
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-total">0</div>
+            <div class="stat-label">Total Files Found</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M20 13V17a2 2 0 01-2 2H6a2 2 0 01-2-2V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M12 3v13M8 13l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-unique">0</div>
+            <div class="stat-label">Unique Files to Copy</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-dupe">0</div>
+            <div class="stat-label">Duplicates Detected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duplicate file list preview -->
+      <div class="card log-card" id="dupe-preview-card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Duplicate Files (will be skipped)</span>
+        </div>
+        <div class="log-table-wrap">
+          <table class="log-table" id="dupe-table">
+            <thead><tr><th>File Name</th><th>Size</th><th>Duplicate Of</th></tr></thead>
+            <tbody id="dupe-tbody"></tbody>
+          </table>
+          <div class="empty-state" id="dupe-empty" style="display:none">
+            <p>🎉 No duplicates found!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-ghost" id="btn-back-setup">← Back</button>
+        <button class="btn-primary" id="btn-consolidate">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Start Consolidation
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 3: PROGRESS & DONE ──────────────────────────────────── -->
+    <div class="screen" id="screen-progress">
+      <div class="screen-header">
+        <div class="step-badges">
+          <span class="badge done">✓</span>
+          <span class="badge-line active-line"></span>
+          <span class="badge done" id="badge-2">✓</span>
+          <span class="badge-line active-line"></span>
+          <span class="badge active" id="badge-3">3</span>
+        </div>
+        <h1 class="screen-title" id="progress-title">Consolidating Files…</h1>
+        <p class="screen-sub" id="progress-sub">Please wait while your files are being processed.</p>
+      </div>
+
+      <!-- Big progress bar -->
+      <div class="card progress-card">
+        <div class="progress-meta">
+          <span id="prog-files-label">0 of 0 files</span>
+          <span id="prog-pct">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="prog-bar"></div>
+        </div>
+        <div class="progress-stats">
+          <div class="pstat">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Elapsed: <strong id="prog-elapsed">0s</strong>
+          </div>
+          <div class="pstat">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Speed: <strong id="prog-speed">0 files/s</strong>
+          </div>
+          <div class="pstat">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+            ETA: <strong id="prog-eta">calculating…</strong>
+          </div>
+          <div class="pstat">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Copied: <strong id="prog-copied">0</strong>
+          </div>
+          <div class="pstat amber">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="2"/></svg>
+            Skipped: <strong id="prog-skipped">0</strong>
+          </div>
+          <div class="pstat red">
+            <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Errors: <strong id="prog-errors">0</strong>
+          </div>
+        </div>
+        <div class="current-file-wrap" id="current-file-wrap">
+          <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="prog-current-file" class="current-file">Initializing…</span>
+        </div>
+      </div>
+
+      <!-- Done summary (hidden until done) -->
+      <div class="card done-card" id="done-card" style="display:none">
+        <div class="done-icon" id="done-icon">✓</div>
+        <h2 id="done-title">Consolidation Complete!</h2>
+        <p id="done-message">All unique files have been copied to the destination.</p>
+        <div class="done-stats" id="done-stats"></div>
+        <div class="done-actions">
+          <button class="btn-ghost" id="btn-open-dest">📂 Open Destination</button>
+          <button class="btn-primary" id="btn-start-over">Start Over</button>
+        </div>
+      </div>
+
+      <!-- Live log table -->
+      <div class="card log-card" id="log-card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Transfer Log</span>
+        </div>
+        <div class="log-table-wrap">
+          <table class="log-table">
+            <thead><tr><th>Status</th><th>File Name</th><th>Source</th></tr></thead>
+            <tbody id="log-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="action-bar" id="progress-action-bar">
+        <button class="btn-danger" id="btn-cancel">⏹ Cancel</button>
+      </div>
+    </div>
+
+  </div><!-- /.app-wrapper -->
+
+  <script src="app.js"></script>
+</body>
+</html>
