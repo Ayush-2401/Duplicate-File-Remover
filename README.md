@@ -59,6 +59,26 @@ graph TD;
 
 ---
 
+## ⚡ One-Click Install (Recommended for End Users)
+
+> **Prerequisites:** Make sure [Git](https://git-scm.com/download/win) and [Node.js](https://nodejs.org/) are installed on your system before running the command below.
+
+This will automatically **clone the repo**, **build the `.exe`**, and **place a shortcut on your Desktop** — all in one step!
+
+### 🖥️ Using Command Prompt (CMD) — Run as Administrator:
+```cmd
+curl -L https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat -o install.bat && install.bat
+```
+
+### 💙 Using PowerShell — Automatically runs as Administrator:
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -OutFile "install.bat"; Start-Process "install.bat" -Verb RunAs
+```
+
+> ⚠️ **Note:** The build step requires **Administrator privileges** (or [Windows Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) enabled) to create the executable successfully.
+
+---
+
 ## 💻 How to Run (Development)
 
 Follow these steps to run the project locally on your PC.
@@ -71,7 +91,7 @@ Follow these steps to run the project locally on your PC.
 
 1. **Clone the repository:**
    ```bash
-   git clone git@github.com:Ayush-2401/Duplicate-File-Remover.git
+   git clone https://github.com/Ayush-2401/Duplicate-File-Remover.git
    cd Duplicate-File-Remover
    ```
 
