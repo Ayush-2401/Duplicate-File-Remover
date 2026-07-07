@@ -61,21 +61,21 @@ graph TD;
 
 ## ⚡ One-Click Install (Recommended for End Users)
 
-> **Prerequisites:** Make sure [Git](https://git-scm.com/download/win) and [Node.js](https://nodejs.org/) are installed on your system before running the command below.
+> **No prerequisites needed!** Just run one of the commands below and the app will be downloaded and installed automatically.
 
-This will automatically **clone the repo**, **build the `.exe`**, and **place a shortcut on your Desktop** — all in one step!
+This will **download the pre-built `.exe`** directly from GitHub Releases and **place a shortcut on your Desktop** — in seconds!
 
-### 🖥️ Using Command Prompt (CMD) — Run as Administrator:
+### 🖥️ Using Command Prompt (CMD):
 ```cmd
 curl -L https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat -o install.bat && install.bat
 ```
 
-### 💙 Using PowerShell — Automatically runs as Administrator:
+### 💙 Using PowerShell:
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -OutFile "install.bat"; Start-Process "install.bat" -Verb RunAs
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -OutFile "install.bat"; Start-Process "install.bat"
 ```
 
-> ⚠️ **Note:** The build step requires **Administrator privileges** (or [Windows Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) enabled) to create the executable successfully.
+> 💡 **Tip:** You can also go to the [Releases page](https://github.com/Ayush-2401/Duplicate-File-Remover/releases) and download the `.exe` directly.
 
 ---
 
