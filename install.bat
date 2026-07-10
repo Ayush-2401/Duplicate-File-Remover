@@ -37,17 +37,14 @@ if %ERRORLEVEL% neq 0 (
 echo.
 echo [3/3] Creating Desktop shortcut...
 
-:: Write a small VBScript to create the shortcut (avoids ^ issues in PowerShell)
-set "VBS=%TEMP%\make_shortcut.vbs"
-(
-    echo Set ws = CreateObject("WScript.Shell"^)
-    echo Set s = ws.CreateShortcut("%DESKTOP%\Duplicate File Remover.lnk"^)
-    echo s.TargetPath = "%APP_DIR%\%EXE_NAME%"
-    echo s.Description = "Duplicate File Remover"
-    echo s.WorkingDirectory = "%APP_DIR%"
-    echo s.Save
-) > "%VBS%"
-
+:: Write VBScript file line by line (safe method, no ^ issues)
+set "VBS=%TEMP%\mk_sc.vbs"
+echo Set ws = CreateObject("WScript.Shell") > "%VBS%"
+echo Set s = ws.CreateShortcut("%DESKTOP%\Duplicate File Remover.lnk") >> "%VBS%"
+echo s.TargetPath = "%APP_DIR%\%EXE_NAME%" >> "%VBS%"
+echo s.WorkingDirectory = "%APP_DIR%" >> "%VBS%"
+echo s.Description = "Duplicate File Remover" >> "%VBS%"
+echo s.Save >> "%VBS%"
 cscript //nologo "%VBS%"
 del "%VBS%"
 
