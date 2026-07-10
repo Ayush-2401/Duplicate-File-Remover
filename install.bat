@@ -9,22 +9,24 @@ echo ============================================================
 echo.
 
 :: ── Configuration ────────────────────────────────────────────
-set "DOWNLOAD_URL=https://github.com/Ayush-2401/Duplicate-File-Remover/releases/latest/download/Duplicate.File.Remover.exe"
+set "DOWNLOAD_URL=https://github.com/Ayush-2401/Duplicate-File-Remover/releases/latest/download/DuplicateFileRemover.zip"
 set "APP_DIR=%LOCALAPPDATA%\DuplicateFileRemover"
 set "EXE_NAME=Duplicate File Remover.exe"
+set "ZIP_FILE=%TEMP%\DuplicateFileRemover.zip"
 
 :: ── Detect Desktop (OneDrive or standard) ────────────────────
 set "DESKTOP=%USERPROFILE%\Desktop"
 if exist "%USERPROFILE%\OneDrive\Desktop" set "DESKTOP=%USERPROFILE%\OneDrive\Desktop"
 
-echo [1/3] Preparing installation folder...
-if not exist "%APP_DIR%" mkdir "%APP_DIR%"
+echo [1/4] Preparing installation folder...
+if exist "%APP_DIR%" rmdir /s /q "%APP_DIR%"
+mkdir "%APP_DIR%"
 
 echo.
-echo [2/3] Downloading Duplicate File Remover...
-echo       (This should only take a few seconds)
+echo [2/4] Downloading Duplicate File Remover...
+echo       (Please wait, file is ~50MB)
 echo.
-curl -L --progress-bar "%DOWNLOAD_URL%" -o "%APP_DIR%\%EXE_NAME%"
+curl -L --progress-bar "%DOWNLOAD_URL%" -o "%ZIP_FILE%"
 
 if %ERRORLEVEL% neq 0 (
     echo.
@@ -35,9 +37,18 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo.
-echo [3/3] Creating Desktop shortcut...
+echo [3/4] Extracting files...
+powershell -NoProfile -Command "Expand-Archive -Path '%ZIP_FILE%' -DestinationPath '%APP_DIR%' -Force"
+del "%ZIP_FILE%"
 
-:: Write VBScript file line by line (safe method, no ^ issues)
+if not exist "%APP_DIR%\%EXE_NAME%" (
+    echo [ERROR] Extraction failed. Executable not found.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [4/4] Creating Desktop shortcut...
 set "VBS=%TEMP%\mk_sc.vbs"
 echo Set ws = CreateObject("WScript.Shell") > "%VBS%"
 echo Set s = ws.CreateShortcut("%DESKTOP%\Duplicate File Remover.lnk") >> "%VBS%"
