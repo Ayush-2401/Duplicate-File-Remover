@@ -67,12 +67,12 @@ This will **download the pre-built `.exe`** directly from GitHub Releases and **
 
 ### 🖥️ Using Command Prompt (CMD):
 ```cmd
-curl -L https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat -o install.bat && install.bat
+del /f install.bat 2>nul & curl -L "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -o install.bat && install.bat
 ```
 
 ### 💙 Using PowerShell:
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -OutFile "install.bat"; Start-Process "install.bat"
+Remove-Item -Force "install.bat" -ErrorAction SilentlyContinue; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ayush-2401/Duplicate-File-Remover/main/install.bat" -OutFile "install.bat"; Start-Process "install.bat"
 ```
 
 > 💡 **Tip:** You can also go to the [Releases page](https://github.com/Ayush-2401/Duplicate-File-Remover/releases) and download the `.exe` directly.
