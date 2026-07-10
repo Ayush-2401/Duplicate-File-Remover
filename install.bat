@@ -12,9 +12,9 @@ echo.
 set "DOWNLOAD_URL=https://github.com/Ayush-2401/Duplicate-File-Remover/releases/latest/download/Duplicate.File.Remover.exe"
 set "APP_DIR=%LOCALAPPDATA%\DuplicateFileRemover"
 set "EXE_NAME=Duplicate File Remover.exe"
-set "DESKTOP=%USERPROFILE%\Desktop"
 
-:: ── Check for OneDrive Desktop ────────────────────────────────
+:: ── Detect Desktop (OneDrive or standard) ────────────────────
+set "DESKTOP=%USERPROFILE%\Desktop"
 if exist "%USERPROFILE%\OneDrive\Desktop" set "DESKTOP=%USERPROFILE%\OneDrive\Desktop"
 
 echo [1/3] Preparing installation folder...
@@ -22,27 +22,34 @@ if not exist "%APP_DIR%" mkdir "%APP_DIR%"
 
 echo.
 echo [2/3] Downloading Duplicate File Remover...
-echo      (This should only take a few seconds)
+echo       (This should only take a few seconds)
 echo.
 curl -L --progress-bar "%DOWNLOAD_URL%" -o "%APP_DIR%\%EXE_NAME%"
 
 if %ERRORLEVEL% neq 0 (
     echo.
-    echo [ERROR] Download failed. Please check your internet connection
-    echo         or visit: https://github.com/Ayush-2401/Duplicate-File-Remover/releases
+    echo [ERROR] Download failed. Check your internet connection or visit:
+    echo         https://github.com/Ayush-2401/Duplicate-File-Remover/releases
     pause
     exit /b 1
 )
 
 echo.
 echo [3/3] Creating Desktop shortcut...
-powershell -NoProfile -Command ^
-    "$ws = New-Object -ComObject WScript.Shell; ^
-     $s = $ws.CreateShortcut('%DESKTOP%\Duplicate File Remover.lnk'); ^
-     $s.TargetPath = '%APP_DIR%\%EXE_NAME%'; ^
-     $s.Description = 'Duplicate File Remover'; ^
-     $s.WorkingDirectory = '%APP_DIR%'; ^
-     $s.Save()"
+
+:: Write a small VBScript to create the shortcut (avoids ^ issues in PowerShell)
+set "VBS=%TEMP%\make_shortcut.vbs"
+(
+    echo Set ws = CreateObject("WScript.Shell"^)
+    echo Set s = ws.CreateShortcut("%DESKTOP%\Duplicate File Remover.lnk"^)
+    echo s.TargetPath = "%APP_DIR%\%EXE_NAME%"
+    echo s.Description = "Duplicate File Remover"
+    echo s.WorkingDirectory = "%APP_DIR%"
+    echo s.Save
+) > "%VBS%"
+
+cscript //nologo "%VBS%"
+del "%VBS%"
 
 echo.
 echo ============================================================
